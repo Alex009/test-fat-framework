@@ -1,6 +1,12 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFrameworkTask
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     kotlin("native.cocoapods")
+}
+
+project.tasks.withType(XCFrameworkTask::class).all {
+    logger.lifecycle("i find xcframework task ${this.name}")
 }
 
 kotlin {
