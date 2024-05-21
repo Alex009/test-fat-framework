@@ -1,24 +1,27 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
-    id("module.publication")
+    kotlin("native.cocoapods")
 }
 
 kotlin {
     targetHierarchy.default()
-    jvm()
-    androidTarget {
-        publishLibraryVariants("release")
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
-        }
-    }
     iosX64()
     iosArm64()
     iosSimulatorArm64()
-    linuxX64()
+
+    cocoapods {
+        version = "1.0.0"
+        summary = "Some description for the Shared Module"
+        homepage = "Link to the Shared Module homepage"
+        ios.deploymentTarget = "15"
+        podfile = project.file("../iosApp/Podfile")
+        framework {
+            baseName = "SharedKit"
+            binaryOptions["bundleId"] = "com.share.module"
+
+            isStatic = true
+        }
+    }
 
     sourceSets {
         val commonMain by getting {
@@ -31,13 +34,5 @@ kotlin {
                 implementation(libs.kotlin.test)
             }
         }
-    }
-}
-
-android {
-    namespace = "org.jetbrains.kotlinx.multiplatform.library.template"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
     }
 }
